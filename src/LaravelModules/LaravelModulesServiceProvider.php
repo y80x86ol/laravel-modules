@@ -113,6 +113,14 @@ class LaravelModulesServiceProvider extends ServiceProvider {
                 require $currentModuleRoutePath;
             }
         }
+
+        //注册二级域名路由
+        $domainPath = $this->domainPath . 'routes.php';
+        if (file_exists($domainPath)) {
+            if (!$this->app->routesAreCached()) {
+                require $domainPath;
+            }
+        }
     }
 
     /**
