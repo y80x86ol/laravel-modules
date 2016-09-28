@@ -28,6 +28,12 @@ class LaravelModulesServiceProvider extends ServiceProvider {
         //初始值创建
         $this->getModulePath($request);
 
+        //注册主配置文件
+        $this->registerMainConfig();
+
+        //注册主配置文件
+        $this->getDomainPath($request);
+
         //注册路由
         $this->registerRoute();
 
@@ -69,6 +75,23 @@ class LaravelModulesServiceProvider extends ServiceProvider {
 
         $this->modulesPath = base_path() . '/app/Modules/';
         $this->currentModulePath = $this->modulesPath . $moduleName . '/';
+    }
+
+    /**
+     * 获取二级域名信息
+     * @param Request $request 请求类
+     */
+    private function getDomainPath($request) {
+        //获取当前二级域名指定模块
+        $host = trim($request->getHost(), "");
+        $hostArray = explode(".", $host);
+        $domainName = current($hostArray);
+        //判断是否存在该二级域名
+        $config = config("modules");
+        var_dump($config);die();
+
+        $this->domainName = ucfirst($domainName);
+        $this->domainPath = base_path() . '/app/Modules/' . ucfirst($domainName) . '/';
     }
 
     /**
@@ -122,19 +145,25 @@ class LaravelModulesServiceProvider extends ServiceProvider {
     }
 
     /**
-     * 注册配置文件
-     * 
-     * 使用：$value = config('courier.option');
+     * 注册主配置文件
      */
-    private function registerConfig() {
+    private function registerMainConfig() {
         //注册主配置文件
-        $configPath = $this->modulesPath . 'Config/app.php';
+        $configPath = $this->modulesPath . 'Config/modules.php';
         if (file_exists($configPath)) {
             $this->publishes([
                 $configPath => config_path('courier.php'),
             ]);
         }
+    }
 
+    /**
+     * 注册模块配置文件
+     *
+     * 使用：$value = config('courier.option');
+     */
+    private function registerConfig()
+    {
         //注册独立模块配置文件
         $currentConfigPath = $this->currentModulePath . 'Config/app.php';
         if (file_exists($currentConfigPath)) {
