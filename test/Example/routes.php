@@ -9,5 +9,9 @@ Route::group(['namespace' => 'App\Modules\Example\Http\Controllers'], function()
     Route::get('example/route', [
         'as' => 'profile', 'uses' => 'ExampleController@route'
     ]);
+
+    Route::get('example/config', [
+        'as' => 'profile', 'uses' => 'ExampleController@config'
+    ]);
 });
 

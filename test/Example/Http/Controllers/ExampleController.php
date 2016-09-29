@@ -47,4 +47,12 @@ class ExampleController extends Controller {
         echo "<p>I am route for example route file<p>";
     }
 
+    /**
+     * 配置文件测试
+     */
+    public function config() {
+        $config = config("example");
+        var_dump($config);
+    }
+
 }
