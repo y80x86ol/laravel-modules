@@ -28,26 +28,25 @@ class LaravelModulesServiceProvider extends ServiceProvider {
         //初始值创建
         $this->getModulePath($request);
 
-        //注册主配置文件
-        $this->registerMainConfig();
-
-        //注册主配置文件
-        $this->getDomainPath($request);
-
         //注册路由
-        $this->registerRoute();
+        $this->registerMainRoute();
 
-        //注册视图
-        $this->registerView();
+        if ($this->moduleName) {
+            //注册路由
+            $this->registerRoute();
 
-        //注册语言包
-        $this->registerTranslations();
+            //注册视图
+            $this->registerView();
 
-        //注册配置文件
-        $this->registerConfig();
+            //注册语言包
+            $this->registerTranslations();
 
-        //注册静态资源
-        $this->registerPublic();
+            //注册配置文件
+            $this->registerConfig();
+
+            //注册静态资源
+            $this->registerPublic();
+        }
     }
 
     /**
@@ -66,59 +65,42 @@ class LaravelModulesServiceProvider extends ServiceProvider {
      * @param Request $request 请求类
      */
     private function getModulePath($request) {
-        //获取当前路由指定模块
-        $uri = trim($request->path(), '/');
-        $uriArray = explode('/', $uri);
-        $moduleName = current($uriArray);
+        //先判断是否是二级域名
+        $modulesConfig = config("modules");
+        if (isset($modulesConfig['sub_domain']) && array_key_exists($request->getHost(), $modulesConfig['sub_domain'])) {
+            $moduleName = $modulesConfig['sub_domain'][$request->getHost()];
+        } else {
+            //通过URI地址获取当前路由指定模块
+            $uri = trim($request->path(), '/');
+            $uriArray = explode('/', $uri);
+            $moduleName = current($uriArray);
+        }
 
         $this->moduleName = $moduleName;
-
         $this->modulesPath = base_path() . '/app/Modules/';
         $this->currentModulePath = $this->modulesPath . $moduleName . '/';
     }
 
     /**
-     * 获取二级域名信息
-     * @param Request $request 请求类
+     * 注册主路由
      */
-    private function getDomainPath($request) {
-        //获取当前二级域名指定模块
-        $host = trim($request->getHost(), "");
-        $hostArray = explode(".", $host);
-        $domainName = current($hostArray);
-        //判断是否存在该二级域名
-        $config = config("modules");
-        var_dump($config);die();
-
-        $this->domainName = ucfirst($domainName);
-        $this->domainPath = base_path() . '/app/Modules/' . ucfirst($domainName) . '/';
-    }
-
-    /**
-     * 注册路由
-     */
-    private function registerRoute() {
-        //注册主路由
+    private function registerMainRoute() {
         $moduleRoutePath = $this->modulesPath . 'routes.php';
         if (file_exists($moduleRoutePath)) {
             if (!$this->app->routesAreCached()) {
                 require $moduleRoutePath;
             }
         }
+    }
 
-        //注册独立模块路由
+    /**
+     * 注册独立模块路由
+     */
+    private function registerRoute() {
         $currentModuleRoutePath = $this->currentModulePath . 'routes.php';
         if (file_exists($currentModuleRoutePath)) {
             if (!$this->app->routesAreCached()) {
                 require $currentModuleRoutePath;
-            }
-        }
-
-        //注册二级域名路由
-        $domainPath = $this->domainPath . 'routes.php';
-        if (file_exists($domainPath)) {
-            if (!$this->app->routesAreCached()) {
-                require $domainPath;
             }
         }
     }
@@ -146,6 +128,7 @@ class LaravelModulesServiceProvider extends ServiceProvider {
     private function registerTranslations() {
         $translationsPath = $this->currentModulePath . 'Translations/';
         $this->loadTranslationsFrom($translationsPath, $this->moduleName);
+
         //发布语言包
         $this->publishes([
             $translationsPath => base_path('resources/lang/vendor/courier'),
@@ -153,26 +136,11 @@ class LaravelModulesServiceProvider extends ServiceProvider {
     }
 
     /**
-     * 注册主配置文件
-     */
-    private function registerMainConfig() {
-        //注册主配置文件
-        $configPath = $this->modulesPath . 'Config/modules.php';
-        if (file_exists($configPath)) {
-            $this->publishes([
-                $configPath => config_path('courier.php'),
-            ]);
-        }
-    }
-
-    /**
-     * 注册模块配置文件
+     * 注册独立模块配置文件
      *
      * 使用：$value = config('courier.option');
      */
-    private function registerConfig()
-    {
-        //注册独立模块配置文件
+    private function registerConfig() {
         $currentConfigPath = $this->currentModulePath . 'Config/app.php';
         if (file_exists($currentConfigPath)) {
             $this->publishes([
