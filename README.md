@@ -11,7 +11,16 @@ You can add in composer.json for laravel5 like this:
     },
 </code></pre>
 
-and run 
-    composer update
+and run `composer update`
 
 ## How To Use
+
+## Test Modules For You
+
+There is a test modules for you ,you can copy test folder to App\Modules
+
+And then,you can get url `youDomain/example/` or `youDomain/index.php/example` and other example url
+
+all in routes.php
+
+</code></pre>
