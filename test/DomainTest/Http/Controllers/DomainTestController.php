@@ -1,7 +1,7 @@
 <?php
 
 /**
- * sub domain test controller
+ * 二级域名测试
  */
 
 namespace App\Modules\Domain\Http\Controllers;
@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 class DomainController extends Controller {
 
     /**
-     * home page
+     * 二级域名首页
      */
     public function index() {
         echo "hello sub domain home page";

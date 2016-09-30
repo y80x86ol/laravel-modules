@@ -23,7 +23,7 @@ class ExampleController extends Controller {
     }
 
     /**
-     * 展示视图和参数传递文件
+     * 展示视图和参数传递
      */
     public function view() {
         $data = [
@@ -33,7 +33,7 @@ class ExampleController extends Controller {
     }
 
     /**
-     * 模块测试
+     * 模块
      */
     public function model() {
         $exampleModel = new ExampleModel();
@@ -41,14 +41,14 @@ class ExampleController extends Controller {
     }
 
     /**
-     * 内部路由测试
+     * 内部路由
      */
     public function route() {
         echo "<p>I am route for example route file<p>";
     }
 
     /**
-     * 配置文件测试
+     * 配置文件
      */
     public function config() {
         $config = config("example");
