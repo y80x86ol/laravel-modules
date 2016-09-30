@@ -175,7 +175,7 @@ class LaravelModulesServiceProvider extends ServiceProvider
     private function registerConfig()
     {
         foreach ($this->allModulesNameList as $moduleName) {
-            $configPath = $this->modulesPath . $moduleName . '/Config/' . strtolower($moduleName) . '.php';
+            $configPath = $this->modulesPath . $moduleName . '/' . strtolower($moduleName) . '.php';
 
             $moduleName = strtolower($moduleName);
             if (file_exists($configPath)) {
@@ -187,7 +187,7 @@ class LaravelModulesServiceProvider extends ServiceProvider
     }
 
     /**
-     * 注册静态资源
+     * 注册所有模块静态资源
      *
      * 模块下的静态资源均发布到对应的模块名字下,且名字均为小写
      */
@@ -204,7 +204,8 @@ class LaravelModulesServiceProvider extends ServiceProvider
     }
 
     /**
-     * 注册数据库迁移
+     * 注册所有模块数据库迁移
+     * 
      */
     private function registerMigrations()
     {
