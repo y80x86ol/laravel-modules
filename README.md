@@ -10,6 +10,10 @@
     },
 </code></pre>
 
+在项目中的config/app.php中添加providers服务提供者
+
+`Y80x86ol\LaravelModules\LaravelModulesServiceProvider::class,`
+
 然后执行`composer update`下载和更新模块
 
 ## 使用
