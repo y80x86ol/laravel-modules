@@ -21,6 +21,7 @@
 3、建立你的模块，在app/Modules中新建Example文件夹，模块名即为Example
 
 4、在app/Modules/Example建立如下文件，如下：
+<pre><code>
     Http
         Controllers     控制器
         Models          模型
@@ -30,6 +31,7 @@
     Translations    国际化
     routes.php      路由
     example.php     模块配置文件[备注：该文件名字要和模块名字一下，单词全部小写]
+</code></pre>
 
 5、怎么样，上面的文件夹和文件是不是很熟悉，对了，你可以按照Laravel5的开发方式进行开发了，书写代码都是一样的
 
